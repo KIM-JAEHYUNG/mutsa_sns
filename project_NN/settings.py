@@ -20,10 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'u3(lp=mt&@8*s38gg#b+8++qz3u7n78pp+n-gpe7c-g1c)dfr1'
+# SECRET_KEY = 'u3(lp=mt&@8*s38gg#b+8++qz3u7n78pp+n-gpe7c-g1c)dfr1'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&k3q+pmu)5%asj6yjpkag')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 ALLOWED_HOSTS = ['*']
 
@@ -38,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'posts',
+    'django.contrib.sites', # new
+    'allauth', # new
+    'allauth.account', # new
+    'allauth.socialaccount', # new
+    'allauth.socialaccount.providers.github', # new
 ]
 
 MIDDLEWARE = [
@@ -119,3 +126,30 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'posts', 'static')
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# 로그인 시 유저네임으로 로그인 (or email)
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+# 회원가입 시 이메일 입력 필수 여부
+ACCOUNT_EMAIL_REQUIRED = False
+# 회원가입 시 이메일 인증 관련 코드
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+AUTHENTICATION_BACKENDS = (
+    # 쟝고 superuser로 로그인 가능
+    "django.contrib.auth.backends.ModelBackend",
+    
+    # 이메일 등으로 로그인 가능
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+SITE_ID = 1
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

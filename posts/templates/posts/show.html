@@ -1,11 +1,71 @@
-<a href="{% url 'home' %}">메인화면</a>
-<h1>#{{ post.id }}번 글</h1>
-<h2>제목 : {{ post.title }}</h2>
-<p>내용 : {{ post.content }}</p>
-<p>쓰니 : {{ post.username }}</p>
-<a href="{% url 'posts:update' post.id %}">수정</a><br>
-<form action="{% url 'posts:delete' post.id %}" method="POST">
-    {% csrf_token %}
-    <input type="submit" value="삭제">
-</form>
-<br>
+{% extends 'base.html' %}
+
+{% block content %}
+<center>
+<div class="card col-4" style="width: auto;">
+    <h2><strong>제목 : {{ post.title }}</strong></h2>
+    <p>{{ post.id }}번째 글</p>
+    <h3>내용 : {{ post.content }}</h3>
+    <p>글쓴이 : {{ post.user }}</p>
+    <p>사진 : <img src="{{ post.image.url }}" width="300px"></img></p>
+
+    <a href="{% url 'posts:update' post.id %}" class="btn btn-outline-dark btn-sm">수정</a>
+    <br>
+    <a href="{% url 'posts:delete' post.id %}" class="btn btn-outline-dark btn-sm">삭제</a>
+    <br>
+    <form action="{% url 'posts:like' post.id%}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="좋아요" class="btn btn-outline-dark btn-sm">
+    </form>
+    <br>
+    좋아요 개수 : {{ post.likes.count }}개
+    <br>
+    좋아요 누른 사람 : 
+    {% for user in post.likes.all %}
+    {{ user.username }}
+    {% empty %}
+    없음
+    {% endfor %}
+</div>
+    <br><br>
+    <!--
+    <form action="{% url 'posts:delete' post.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+    </form>
+    <br>
+    -->
+    <!--
+    <form action="{% url 'posts:like' post.id%}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="좋아요">
+    </form>
+    
+
+    {{ post.likes.count }}개
+    <br>
+    좋아요 누른 사람
+    {% for user in post.likes.all %}
+    {{ user.username }}
+    {% empty %}
+    없음
+    {% endfor %}
+    -->
+
+    <div class="card col-4" style="width: auto;">
+        <h2>댓글</h2>
+        <br>
+        <p>댓글 수 : {{ post.comments.count }}개</p> <!-- related_name을 써서 가능한 부분 -->
+        <a href="{% url 'posts:new_comment' post.id %}" class="btn btn-outline-dark btn-sm">댓글 남기기</a> <!-- url 클릭 시 post.id를 함께 넘겨줌 -->
+        {% for comment in post.comments.all %}
+            <p>작성자 : {{ comment.user }}</p>
+            <p>내용 : {{ comment.content }}</p>
+            {% empty %}
+            <p>댓글이 없습니다.</p>
+        {% endfor %}
+    </div>
+    <br>
+
+</center>
+
+{%endblock %}

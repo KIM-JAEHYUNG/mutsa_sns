@@ -1,12 +1,23 @@
-<h1>새로운 글을 작성해보아요</h1>
+{% extends 'base.html' %}
 
-<form action="{% url 'posts:create' %}" method="POST">
-    {% csrf_token %}
-    <labe>글의 제목</labe><br>
-    <input type="text" name="title"><br>
-    
-    <label>글의 내용</label><br>
-    <textarea name="content"></textarea><br>
-    
-    <input type="submit" value="글쓰기">
-</form>
+{% block content %}
+<center>
+    <h1><br>{{ user.username }}님! 지금 무슨 생각을 하고 있나요?</h1><br>
+    <div class="card col-4" style="width: auto;">
+
+        <form action="{% url 'posts:create' %}" method="POST">
+            {% csrf_token %}
+            <labe>제목</labe><br>
+            <input type="text" name="title"><br>
+            
+            <label>내용</label><br>
+            <textarea name="content"></textarea><br>
+            
+            <label>사진</label><br>
+            <input type="file" name="image" class="btn btn-outline-dark btn-sm"/><br><br>
+            
+            <input type="submit" value="글쓰기" class="btn btn-outline-dark btn-sm">
+        </form>
+    </div>
+</center>
+{%endblock %}

@@ -87,7 +87,7 @@ def create_comment(request, id):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
-            comment.username = request.user
+            comment.user = request.user
             comment.save()
             return redirect('posts:show', post.id)
     return render(request, 'posts/new_comment.html', {'form': form})

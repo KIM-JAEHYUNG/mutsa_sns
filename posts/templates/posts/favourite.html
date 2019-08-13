@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1><br>내가 좋아요 누른 글</h1>
+    <br>
+    좋아요 누른 글<br>
+    {% for posts in post %}<br>
+    <h3>{{ posts.title }}</h3>
+    {% empty %}
+    없음
+    {% endfor %}
+
+
+
+{%endblock %}

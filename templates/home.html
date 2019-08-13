@@ -1,4 +1,9 @@
-<a href="{% url 'posts:new' %}">새 글 쓰기</a>
+{% extends 'base.html' %}
+
+{% load static from staticfiles %}
+
+
+<!--<a href="{% url 'posts:new' %}">새 글 쓰기</a>
 <p>===========================</p>
 {% for post in posts %}
     <a href="{% url 'posts:show' post.id %}"><h2>#{{ post.id }} : {{ post.title }}</h2></a>
@@ -6,4 +11,66 @@
     <p>===========================</p>
     {% empty %}
     <p>글이 없습니다.</p>
-{% endfor %}
+{% endfor %}-->
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<center>
+  <br><h3>안녕하세요 {{ user.username }}님!</h3> 
+  <a href="{% url 'account_logout' %}" class = "btn btn-outline-dark btn-lg" >로그아웃</a>
+  <a href="{% url 'posts:new' %}" class = "btn btn-outline-dark btn-lg">새 글 쓰기</a>
+  <a href="{% url 'posts:favourite' %}" class = "btn btn-outline-dark btn-lg">내가 좋아요한 글 목록</a>
+</center>
+<br>
+<body>
+  {% for post in posts %}
+  
+  <div class="row">
+
+    <div class="card col-4" style="width: 18rem;">
+      {% if post.image %}
+          <img src="{{ post.image.url }}" class="card-img-top" alt="...">
+      {% endif %}
+        <div class="card-body">
+          <!--<a href="{% url 'posts:show' post.id %}"><h3>{{ post.title }}</h3></a>-->
+          <h3>{{ post.title }}</h3>
+          <h5 class="card-title">{{ post.user }}</h5>
+          <p class="card-text">{{ post.content }}</p>
+          <a href="{% url 'posts:show' post.id %}" class="btn btn-outline-dark btn-sm">상세보기</a>
+        </div>
+    </div>
+  </div>
+  <br>
+  {% endfor %}
+
+
+
+{% else %}
+  <br>
+  <div class="center">
+    <h1>멋사 sns</h1>
+    <img src="https://i2-prod.mirror.co.uk/incoming/article8205690.ece/ALTERNATES/s615/Lion-selfie.jpg" alt="귀여운 아기사자" width="600px">
+    <h2><br><bold>새 계정 만들기</bold></h2>
+    <a href="{% url 'account_signup' %}" class="btn btn-outline-dark btn-lg">회원 가입</a>
+    <br><br>
+    <h2>이미 가입 하셨다구요?</h2>
+    <a href="{% url 'account_login' %}" class="btn btn-outline-dark btn-lg">로그인</a>
+  </div>
+{% endif %}
+
+</body>
+
+<style>
+  .center{
+    text-align: center;
+  }
+
+  body {
+          
+            text-align:center;
+        }
+
+</style>
+
+{%endblock %}
